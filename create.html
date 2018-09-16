@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Создать карточку объекта</title>
+</head>
+<body>
+	<h1>Создать карточку объекта</h1>
+	<p>При загрузке этой страницы система может запросить разрешение на использование видеокамеры.</p>
+   	<p>1. Введите название объекта</p>
+   	<input id="description" type="text">
+	<p>2. Наведите камеру на объект и сфотографируйте его</p>
+   	<div><video id="preview" width="200" height="100" autoplay></video></div>
+   	<div><button id="snap">Сфотографировать</button></div>
+   	<div><canvas id="canvas" width="160"></canvas></div>
+	<p>3. Создайте навиадрес объекта</p>
+   	<button id="create">Создать навиадрес</button>
+   	<p id="info"></p>
+   	<p id="label"></p>
+
+<script>
+var video = document.getElementById('preview');
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+
+// Создаем видеопоток
+if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+        video.src = window.URL.createObjectURL(stream);
+        video.play();
+    });
+}	
+
+// Добавляем событие по нажатию
+document.getElementById("snap").addEventListener("click", function() {
+	context.drawImage(video, 0, 0, 160, 100);
+});
+
+document.getElementById("create").addEventListener("click", function() {
+	// Получаем токен для авторизации
+	getToken().then((token)=>{
+		createNaviaddress(token);
+	});
+});
+
+
+// Получить токен
+function getToken() {
+	return new Promise((resolve,reject) => {
+		let url = 'https://staging-api.naviaddress.com/api/v1.5/Sessions';
+		let params = {
+			password:'qwerty',    // Пароль и логин для доступа к API 
+			Email:'test@test.com'  //  нужно получить заполнив форму регистрации
+		};
+
+		fetch(url,
+		{
+		    headers: {
+		      'Accept': 'application/json',
+		      'Content-Type': 'application/json'
+		    },
+		    method: "POST",
+		    body: JSON.stringify(params)
+		})
+		.then((res1) => {
+			res1.json().then((res2) => resolve(res2.token))
+		});
+	});
+}
+
+function createNaviaddress(token) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+        	(position)=>{
+        		let coords = position.coords;
+
+				let url = 'https://api.naviaddress.com/api/v1.5/addresses/';
+        		let body = {
+        			lat: coords.latitude,
+        			lng: coords.longitude,
+        			description: "Инвентаризатор: "+document.getElementById("description").value,
+        			address_type: "free", 
+        			default_lang: "ru"
+        		};
+
+				fetch(url,
+				{
+				    headers: {
+				      'Accept': 'application/json',
+				      'Content-Type': 'application/json',
+				      'auth-token': token
+				    },
+				    method: "POST",
+				    body: JSON.stringify(body)
+				}).then((res1) => {
+					console.log(res1);
+					alert('Объект создан');
+					reject();
+					/*
+					res1.json().then((res2) => {
+						console.log(97,res2);
+					});
+					*/
+				});
+		});
+
+    } else {
+    	alert("Геолокация не поддерживается вашим браузером");
+    }
+}
+
+</script>
+
+
+</body>
+</html>

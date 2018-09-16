@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Поиск объектов</title>
+</head>
+<body>
+<h1>Поиск объектов</h1>
+<p>
+При загрузке этой страницы система может спросить разрешение на использование вашего месторасположения. В демонстрационной версии программы запрос списка может занять несколько секунд. 
+</p>
+<div>
+	<input id="querystr" type="search" name="Введите название или навиадрес объекта">
+	<button id="searchname">Искать по названию</button>
+	<button id="searchnear">Искать рядом</button>
+</div>
+<div id="list"></div>
+
+<script>
+const DELTA = 0.001; // Граница выбора объектов (в градусах)
+const LIMIT = 100;   // Ограничение на количество возвращаемых объектов
+
+document.getElementById("searchname").addEventListener("click",searchName);
+document.getElementById("searchnear").addEventListener("click",searchNear);
+
+async function searchNear() {
+	let coords = await getLocation();
+	let rect = createRect(coords,DELTA);
+	let list = await getList(rect);
+	displayList(list);
+}
+
+// Получить текущее расположение
+
+function getLocation() {
+	return new Promise((resolve,reject) => {
+	    if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(
+	        	(position)=>resolve(position.coords));
+	    } else {
+	    	alert("Геолокация не поддерживается вашим браузером");
+	    	reject();
+	    }
+	});
+}
+
+// Создать квадрат для поиска вокруг адреса
+
+function createRect(coords,delta) {
+	return {
+		lt_lat:coords.latitude - delta,
+		lt_lng:coords.longitude - delta,
+		rb_lat:coords.latitude + delta,
+		rb_lng:coords.longitude + delta
+	}
+}
+
+// Получить список навиадресов, находящихся в заданном квадрате
+
+function getList(rect) {
+	return new Promise((resolve, reject) => {
+		let url = new URL('https://dev-api.naviaddress.com/api/v1.5/Map');
+		let params = {
+			address_type: 'free',
+			limit: LIMIT,
+			lt_lat:rect.lt_lat, 
+			lt_lng:rect.lt_lng,
+			rb_lat:rect.rb_lat, 
+			rb_lng:rect.rb_lng
+		};
+		url.search = new URLSearchParams(params);
+
+		fetch(url).then((res1)=>
+			res1.json().then((res2)=>resolve(res2.result))
+		);
+	});
+}
+
+async function searchName() {
+	let coords = await getLocation();
+	let querystr = document.getElementById('querystr').value;
+	let list = await searchList(coords,querystr);
+	displayList(list);
+}
+
+function searchList(coords, querystr) {
+	return new Promise((resolve, reject) => {
+		let url = new URL('https://dev-api.naviaddress.com/api/v1.5/Addresses/Search');
+		let params = {
+			address_type: 'free',
+			limit: LIMIT,
+			querystr:querystr,
+			lat: coords.latitude,
+			lng: coords.longitude
+		};
+		url.search = new URLSearchParams(params);
+
+		fetch(url).then((res1)=>
+			res1.json().then((res2)=>resolve(res2.result))
+		);
+	});
+}
+
+
+function displayList(list) {
+	let el = document.getElementById('list');
+	el.innerHTML = '';
+	list.forEach((item)=>{
+		getAddress(item).then((res)=>{
+			var s = '<div><a href="/get.html?container='+res.container+'&naviaddress='+res.naviaddress;
+			s += '">['+res.container+']'+res.naviaddress;
+			if(res.description) {
+				s += ' - '+res.description;
+			}
+			if(res.cover && res.cover.length > 0) {
+				s += '<img src="'+res.cover[0].image+'" width="30px">';
+			}
+			s += '</a></div>';
+			el.innerHTML += s;
+		});
+	});
+}
+
+
+// Получить информацию по навиадресу
+
+function getAddress(obj) {
+	return new Promise((resolve, reject) => {
+		let url = 'https://dev-api.naviaddress.com/api/v1.5/Addresses/'
+			+ obj.container+'/'+obj.naviaddress;
+
+		fetch(url).then((res1)=>
+			res1.json().then((res2)=>resolve(res2.result))
+		);
+	});
+}
+
+</script>
+
+</body>
+</html>

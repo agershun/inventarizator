@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Карточка объекта</title>
+	<script src="params.js"></script>
+</head>
+<body>
+	<h1>Карточка объекта</h1>
+	<div>Навиадрес: <span id="naviaddress"></span></div>
+	<div>Название: <span id="description"></span></div>
+	<div><img id="image" height="100px"></div>
+	<div id="label"></div>
+<script>
+
+fetch('https://staging-api.naviaddress.com/api/v1.5/Addresses/'
+	+ params.container+'/' + params.naviaddress).then((res1)=> 
+	res1.json().then((res2)=>{
+		let r = res2.result;
+		document.getElementById('naviaddress').innerText = '['+r.container+']'+r.naviaddress;
+		if(r.description) {
+			document.getElementById('description').innerHTML = r.description;
+		}
+		if(r.cover && r.cover.length>0) {
+			document.getElementById('image').src = r.cover[0].image;
+		}
+
+		document.getElementById('label').innerHTML = '<a href="label.html?container='+r.container+'&naviaddress='+r.naviaddress+'">Печать QR-кода</a>';
+	})
+);
+</script>
+
+</body>
+</html>
