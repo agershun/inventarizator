@@ -2,18 +2,48 @@
 <html>
 <head>
 	<title>Поиск объектов</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="css/ratchet.css" rel="stylesheet">
+    <script src="js/ratchet.js"></script>   	
 </head>
 <body>
-<h1>Поиск объектов</h1>
-<p>
-При загрузке этой страницы система может спросить разрешение на использование вашего месторасположения. В демонстрационной версии программы запрос списка может занять несколько секунд. 
-</p>
-<div>
-	<input id="querystr" type="search" name="Введите название или навиадрес объекта">
-	<button id="searchname">Искать по названию</button>
-	<button id="searchnear">Искать рядом</button>
-</div>
-<div id="list"></div>
+  <header class="bar bar-nav">
+    <a href="index.html">
+      <button class="btn btn-link btn-nav pull-left">
+        <span class="icon icon-left-nav"></span>
+          Назад
+        </button>
+      </a>
+      <h1 class="title">Поиск объектов</h1>
+    </header>
+
+
+    <div class="content">
+      	<p class="content-padded">При загрузке этой страницы система может спросить разрешение на использование вашего месторасположения. В демонстрационной версии программы запрос списка может занять несколько секунд. </p>
+
+		<div class="content-padded">
+			<input id="querystr" type="search" name="Введите название или навиадрес объекта">
+			<button id="searchname" class="btn btn-primary">Искать по названию</button>
+			<button id="searchnear" class="btn btn-primary">Искать рядом</button>
+		</div>
+
+		<div id="list"></div>
+
+		<ul class="table-view">
+		  <li class="table-view-cell media">
+		    <a class="navigate-right">
+		      <img class="media-object pull-left" src="http://placehold.it/42x42">
+		      <div class="media-body">
+		        Item 1
+		        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Lorem ipsum dolor sit amet.</p>
+		      </div>
+		    </a>
+		  </li>
+		</ul>
+	</div>
 
 <script>
 const DELTA = 0.001; // Граница выбора объектов (в градусах)
@@ -106,15 +136,33 @@ function displayList(list) {
 	el.innerHTML = '';
 	list.forEach((item)=>{
 		getAddress(item).then((res)=>{
-			var s = '<div><a href="/get.html?container='+res.container+'&naviaddress='+res.naviaddress;
-			s += '">['+res.container+']'+res.naviaddress;
-			if(res.description) {
-				s += ' - '+res.description;
-			}
-			if(res.cover && res.cover.length > 0) {
-				s += '<img src="'+res.cover[0].image+'" width="30px">';
-			}
+			var s = '<div><a href="get.html?container='+res.container+'&naviaddress='+res.naviaddress;
 			s += '</a></div>';
+
+			var s = `
+		  <li class="table-view-cell media">
+		    <a class="navigate-right" href="get.html?container=`+res.container+'&naviaddress='+res.naviaddress+`">
+		      <img class="media-object pull-left" style="width:42px" src="`;
+				if(res.cover && res.cover.length > 0) {
+					s += res.cover[0].image;
+				} else {
+					s += 'http://placehold.it/42x42';
+				}
+		      s += `">
+		      <div class="media-body">`;
+				s += '['+res.container+']'+res.naviaddress;
+		        s+=`<p>`;
+				if(res.description) {
+					s += res.description;
+				}
+
+		        s+=`</p>
+		      </div>
+		    </a>
+		  </li>
+`;			
+
+
 			el.innerHTML += s;
 		});
 	});

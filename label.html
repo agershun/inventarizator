@@ -2,17 +2,37 @@
 <html>
 <head>
 	<title>Карточка объекта</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="css/ratchet.css" rel="stylesheet">
+    <script src="js/ratchet.js"></script>   	
+
 	<script src="lib/qrcode.min.js"></script>
 	<script src="params.js"></script>
 </head>
 <body>
-	<div id="qrcode"></div>
-	<div id="naviaddress"></div>
+  <header class="bar bar-nav">
+    <a href="index.html">
+      <button class="btn btn-link btn-nav pull-left">
+        <span class="icon icon-left-nav"></span>
+          Назад
+        </button>
+      </a>
+      <h1 class="title">Метка объекта</h1>
+    </header>
+   <div class="content">
+    	<div class="content-padded" style="text-align: center;">
+			<div id="qrcode"></div>
+		</div>
+		<div>
+			<h1 id="naviaddress" style="text-align:center;"></h1>
+		</div>
 <script>
-
 var qrcode = new QRCode(document.getElementById("qrcode"), {
-	width : 100,
-	height : 100
+	width : 300,
+	height : 300
 });
 //		qrcode.makeCode('https://naviaddress.com/'+r.container+'/'+r.naviaddress);
 qrcode.makeCode(params.container+'/'+params.naviaddress);

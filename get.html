@@ -2,14 +2,34 @@
 <html>
 <head>
 	<title>Карточка объекта</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="css/ratchet.css" rel="stylesheet">
+    <script src="js/ratchet.js"></script>   	
+
 	<script src="params.js"></script>
 </head>
 <body>
-	<h1>Карточка объекта</h1>
-	<div>Навиадрес: <span id="naviaddress"></span></div>
-	<div>Название: <span id="description"></span></div>
-	<div><img id="image" height="100px"></div>
-	<div id="label"></div>
+  <header class="bar bar-nav">
+    <a href="index.html">
+      <button class="btn btn-link btn-nav pull-left">
+        <span class="icon icon-left-nav"></span>
+          Назад
+        </button>
+      </a>
+      <h1 class="title">Карточка объекта</h1>
+    </header>
+
+   <div class="content">
+    	<p class="content-padded">При загрузке этой страницы система может запросить разрешение на использование видеокамеры.</p>
+
+		<div class="content-padded">Навиадрес: <span id="naviaddress"></span></div>
+		<div class="content-padded">Название: <span id="description"></span></div>
+		<div class="content-padded"><img id="image" width="100%"></div>
+		<div class="content-padded" id="label"></div>
+	</div>
 <script>
 
 fetch('https://staging-api.naviaddress.com/api/v1.5/Addresses/'

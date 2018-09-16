@@ -2,25 +2,51 @@
 <html>
 <head>
 	<title>Создать карточку объекта</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="css/ratchet.css" rel="stylesheet">
+    <script src="js/ratchet.js"></script>		
 </head>
 <body>
-	<h1>Создать карточку объекта</h1>
-	<p>При загрузке этой страницы система может запросить разрешение на использование видеокамеры.</p>
-   	<p>1. Введите название объекта</p>
-   	<input id="description" type="text">
-	<p>2. Наведите камеру на объект и сфотографируйте его</p>
-   	<div><video id="preview" width="200" height="100" autoplay></video></div>
-   	<div><button id="snap">Сфотографировать</button></div>
-   	<div><canvas id="canvas" width="160"></canvas></div>
-	<p>3. Создайте навиадрес объекта</p>
-   	<button id="create">Создать навиадрес</button>
+	<header class="bar bar-nav">
+		<a href="index.html">
+			<button class="btn btn-link btn-nav pull-left">
+	    	<span class="icon icon-left-nav"></span>
+	    		Назад
+	  		</button>
+	  	</a>
+      <h1 class="title">Создать карточку</h1>
+    </header>
+
+    <div class="content">
+    	<p class="content-padded">При загрузке этой страницы система может запросить разрешение на использование видеокамеры.</p>
+    	<div class="content-padded">
+	   		<p>1. Введите название объекта</p>
+	   		<input id="description" type="text">
+  		</div>
+    	<div class="content-padded" id="step2">
+	   		<p>2. Наведите камеру на объект и сфотографируйте его</p>
+   		   	<div><video id="video" style="width:100%" autoplay></video></div>
+		   	<div><button class="btn btn-primary btn-block" id="snap">Сфотографировать</button></div>
+  		</div>
+    	<div class="content-padded" id="step3" style="display:none">
+		   	<div><canvas id="canvas"></canvas></div>
+			<p>3. Создайте навиадрес объекта</p>
+		   	<button class="btn btn-primary btn-block" id="create">Создать навиадрес</button>
+  		</div>
+
+    </div>
+
    	<p id="info"></p>
    	<p id="label"></p>
 
 <script>
-var video = document.getElementById('preview');
+var video = document.getElementById('video');
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
+console.log(video);
 
 // Создаем видеопоток
 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -32,7 +58,12 @@ if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
 // Добавляем событие по нажатию
 document.getElementById("snap").addEventListener("click", function() {
-	context.drawImage(video, 0, 0, 160, 100);
+	let w = video.clientWidth;
+	let h = video.clientHeight;
+
+	document.getElementById("step2").style.display = "none";
+	document.getElementById("step3").style.display = "block";
+	context.drawImage(video, 0, 0, w, h);
 });
 
 document.getElementById("create").addEventListener("click", function() {

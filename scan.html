@@ -1,20 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Сканировать QR-код</title>
+	 <title>Сканировать QR-код</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="css/ratchet.css" rel="stylesheet">
+    <script src="js/ratchet.js"></script>   
+
 	<script src="lib/instascan.min.js"></script>
 </head>
 <body>
-	<h1>Сканировать QR-код</h1>
-   	<video id="preview" style="width:200px"></video>
-   	<div id="info">Наведите камеру на QR-код</div>
+  <header class="bar bar-nav">
+    <a href="index.html">
+      <button class="btn btn-link btn-nav pull-left">
+        <span class="icon icon-left-nav"></span>
+          Назад
+        </button>
+      </a>
+      <h1 class="title">Сканировать QR-код</h1>
+    </header>
+
+
+    <div class="content">
+      <p class="content-padded">Для сканирования наведите камеру на QR-код.</p>
+      <div class="content-padded">
+   	    <video id="video" style="width:100%"></video>
+      </div>
+      <div class="content-padded" id="info">
+        Наведите камеру на QR-код
+      </div>
+
     <script>
-      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      let scanner = new Instascan.Scanner({ video: document.getElementById('video') });
       scanner.addListener('scan', function (content) {
         console.log(content);
         let parts = content.split('/');
         if(parts.length == 2 && parts[0] == +parts[0] && parts[1] == +parts[1]) {
-	        location.href = '/get.html?container'+parts[0]+'/'+parts[1];
+	        location.href = 'get.html?container='+parts[0]+'&naviaddress='+parts[1];
         } else {
         	document.getElementById('info').innerHTML = 'QR-код не содержит навиадрес.';
         }

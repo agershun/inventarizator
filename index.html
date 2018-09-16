@@ -2,13 +2,39 @@
 <html>
 <head>
 	<title>Инвентаризатор</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="css/ratchet.css" rel="stylesheet">
+    <script src="js/ratchet.js"></script>	
 </head>
 <body>
-	<h1>Инвентаризатор</h1>
-	<p>Пример программы для инвентаризации имущества на основе платформы Naviaddress</p>
-	<div><a href="create.html">Создать карточку</a></div>
-	<div><a href="scan.html">Сканировать QR-код</a></div>
-	<div><a href="search.html">Найти объект</a></div>
-	<p>(с) Андрей Гершун, 2018</p>
+	<header class="bar bar-nav">
+      <h1 class="title">Инвентаризатор</h1>
+    </header>
+    <div class="content">
+      <p class="content-padded">Пример программы для инвентаризации имущества на основе платформы Naviaddress.</p>
+      <div class="card">
+        <ul class="table-view">
+          <li class="table-view-cell">
+            <a class="push-right" href="create.html">
+              <strong>Создать карточку</strong>
+            </a>
+          </li>
+          <li class="table-view-cell">
+            <a class="push-right" href="scan.html">
+              <strong>Сканировать QR-код</strong>
+            </a>
+          </li>
+          <li class="table-view-cell">
+            <a class="push-right" href="search.html">
+              <strong>Найти объект</strong>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
 </body>
 </html>
