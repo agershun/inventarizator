@@ -30,9 +30,9 @@
 			<button id="searchnear" class="btn btn-primary">Искать рядом</button>
 		</div>
 
-		<div id="list"></div>
 
-		<ul class="table-view">
+		<ul id="list" class="table-view">
+<!--
 		  <li class="table-view-cell media">
 		    <a class="navigate-right">
 		      <img class="media-object pull-left" src="http://placehold.it/42x42">
@@ -42,6 +42,7 @@
 		      </div>
 		    </a>
 		  </li>
+-->		  
 		</ul>
 	</div>
 
@@ -141,7 +142,7 @@ function displayList(list) {
 
 			var s = `
 		  <li class="table-view-cell media">
-		    <a class="navigate-right" href="get.html?container=`+res.container+'&naviaddress='+res.naviaddress+`">
+		    <a class="navigate-right" href="get.html?container=`+res.container+'&naviaddress='+res.naviaddress+`" data-ignore="push">
 		      <img class="media-object pull-left" style="width:42px" src="`;
 				if(res.cover && res.cover.length > 0) {
 					s += res.cover[0].image;

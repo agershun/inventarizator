@@ -44,7 +44,7 @@ fetch('https://staging-api.naviaddress.com/api/v1.5/Addresses/'
 			document.getElementById('image').src = r.cover[0].image;
 		}
 
-		document.getElementById('label').innerHTML = '<a href="label.html?container='+r.container+'&naviaddress='+r.naviaddress+'">Печать QR-кода</a>';
+		document.getElementById('label').innerHTML = '<a href="label.html?container='+r.container+'&naviaddress='+r.naviaddress+'" data-ignore="push">Печать QR-кода</a>';
 	})
 );
 </script>
