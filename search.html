@@ -25,14 +25,14 @@
       	<p class="content-padded">При загрузке этой страницы система может спросить разрешение на использование вашего месторасположения. В демонстрационной версии программы запрос списка может занять несколько секунд. </p>
 
 		<div class="content-padded">
-			<input id="querystr" type="search" placeholder="Строка для поиска"
+			<input id="querystr" type="search" placeholder="Навиадрес или название"
 				 name="Введите название или навиадрес объекта">
 			<button id="searchname" class="btn btn-primary">
 				<span class="icon icon-search"></span>
 				Искать по названию
 			</button>
-			<button id="searchnear" class="btn btn-primary">
-				<span class="icon icon-search"></span>
+			<button id="searchnear" class="btn btn-positive">
+				<span class="icon icon-star-filled"></span>
 				Искать рядом
 			</button>
 		</div>
@@ -52,6 +52,24 @@
 -->		  
 		</ul>
 	</div>
+    <nav class="bar bar-tab">
+      <a class="tab-item" href="index.html" data-ignore="push">
+        <span class="icon icon-home"></span>
+        <span class="tab-label">Начало</span>
+      </a>
+      <a class="tab-item" href="create.html" data-ignore="push">
+        <span class="icon icon-compose"></span>
+        <span class="tab-label">Создать</span>
+      </a>
+      <a class="tab-item" href="scan.html" data-ignore="push">
+        <span class="icon icon-bars"></span>
+        <span class="tab-label">Сканировать</span>
+      </a>
+      <a class="tab-item active" href="search.html" data-ignore="push">
+        <span class="icon icon-search"></span>
+        <span class="tab-label">Поиск</span>
+      </a>
+    </nav>
 
 <script>
 const DELTA = 0.001; // Граница выбора объектов (в градусах)

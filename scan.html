@@ -31,6 +31,26 @@
       <div class="content-padded" id="info">
         Наведите камеру на QR-код
       </div>
+    </div>
+
+    <nav class="bar bar-tab">
+      <a class="tab-item" href="index.html" data-ignore="push">
+        <span class="icon icon-home"></span>
+        <span class="tab-label">Начало</span>
+      </a>
+      <a class="tab-item" href="create.html" data-ignore="push">
+        <span class="icon icon-compose"></span>
+        <span class="tab-label">Создать</span>
+      </a>
+      <a class="tab-item active" href="scan.html" data-ignore="push">
+        <span class="icon icon-bars"></span>
+        <span class="tab-label">Сканировать</span>
+      </a>
+      <a class="tab-item" href="search.html" data-ignore="push">
+        <span class="icon icon-search"></span>
+        <span class="tab-label">Поиск</span>
+      </a>
+    </nav>
 
     <script>
       let scanner = new Instascan.Scanner({ video: document.getElementById('video') });
@@ -46,7 +66,7 @@
       });
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 1) {
-          scanner.start(cameras[1]);
+          scanner.start(cameras[cameras.length-1]);
         } else if (cameras.length > 0) {
           scanner.start(cameras[0]);
         } else {

@@ -32,7 +32,7 @@
 		   	<div><button class="btn btn-primary btn-block" id="snap">Сфотографировать</button></div>
   		</div>
     	<div class="content-padded" id="step3" style="display:none">
-		   	<div><canvas id="canvas"></canvas></div>
+		   	<div><canvas id="canvas" style="width:391;height:293"></canvas></div>
 			<p>3. Создайте навиадрес объекта</p>
 		   	<button class="btn btn-primary btn-block" id="create">Создать навиадрес</button>
   		</div>
@@ -41,6 +41,25 @@
 
    	<p id="info"></p>
    	<p id="label"></p>
+
+    <nav class="bar bar-tab">
+      <a class="tab-item" href="index.html" data-ignore="push">
+        <span class="icon icon-home"></span>
+        <span class="tab-label">Начало</span>
+      </a>
+      <a class="tab-item active" href="create.html" data-ignore="push">
+        <span class="icon icon-compose"></span>
+        <span class="tab-label">Создать</span>
+      </a>
+      <a class="tab-item" href="scan.html" data-ignore="push">
+        <span class="icon icon-bars"></span>
+        <span class="tab-label">Сканировать</span>
+      </a>
+      <a class="tab-item" href="search.html" data-ignore="push">
+        <span class="icon icon-search"></span>
+        <span class="tab-label">Поиск</span>
+      </a>
+    </nav>
 
 <script>
 var video = document.getElementById('video');
@@ -58,8 +77,8 @@ if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
 // Добавляем событие по нажатию
 document.getElementById("snap").addEventListener("click", function() {
-	let w = video.clientWidth;
-	let h = video.clientHeight;
+	let w = 391;
+	let h = 283;
 
 	document.getElementById("step2").style.display = "none";
 	document.getElementById("step3").style.display = "block";
