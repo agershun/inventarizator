@@ -11,7 +11,7 @@
 </head>
 <body>
   <header class="bar bar-nav">
-    <a href="index.html">
+    <a href="index.html" data-ignore="push">
       <button class="btn btn-link btn-nav pull-left">
         <span class="icon icon-left-nav"></span>
           Назад
@@ -25,9 +25,16 @@
       	<p class="content-padded">При загрузке этой страницы система может спросить разрешение на использование вашего месторасположения. В демонстрационной версии программы запрос списка может занять несколько секунд. </p>
 
 		<div class="content-padded">
-			<input id="querystr" type="search" name="Введите название или навиадрес объекта">
-			<button id="searchname" class="btn btn-primary">Искать по названию</button>
-			<button id="searchnear" class="btn btn-primary">Искать рядом</button>
+			<input id="querystr" type="search" placeholder="Строка для поиска"
+				 name="Введите название или навиадрес объекта">
+			<button id="searchname" class="btn btn-primary">
+				<span class="icon icon-search"></span>
+				Искать по названию
+			</button>
+			<button id="searchnear" class="btn btn-primary">
+				<span class="icon icon-search"></span>
+				Искать рядом
+			</button>
 		</div>
 
 
