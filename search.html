@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link href="css/ratchet.css" rel="stylesheet">
-    <script src="js/ratchet.js"></script>   	
+    <script src="js/ratchet.js"></script>   
 </head>
 <body>
   <header class="bar bar-nav">
@@ -25,7 +25,7 @@
       	<p class="content-padded">При загрузке этой страницы система может спросить разрешение на использование вашего месторасположения. В демонстрационной версии программы запрос списка может занять несколько секунд. </p>
 
 		<div class="content-padded">
-			<input id="querystr" type="search" placeholder="Навиадрес или название"
+			<input id="querystr" type="search" x-webkit-speech placeholder="Навиадрес или название"
 				 name="Введите название или навиадрес объекта">
 			<button id="searchname" class="btn btn-primary">
 				<span class="icon icon-search"></span>
@@ -114,7 +114,7 @@ function createRect(coords,delta) {
 
 function getList(rect) {
 	return new Promise((resolve, reject) => {
-		let url = new URL('https://dev-api.naviaddress.com/api/v1.5/Map');
+		let url = new URL('https://staging-api.naviaddress.com/api/v1.5/Map');
 		let params = {
 			address_type: 'free',
 			limit: LIMIT,
@@ -140,7 +140,7 @@ async function searchName() {
 
 function searchList(coords, querystr) {
 	return new Promise((resolve, reject) => {
-		let url = new URL('https://dev-api.naviaddress.com/api/v1.5/Addresses/Search');
+		let url = new URL('https://staging-api.naviaddress.com/api/v1.5/Addresses/Search');
 		let params = {
 			address_type: 'free',
 			limit: LIMIT,
@@ -199,7 +199,7 @@ function displayList(list) {
 
 function getAddress(obj) {
 	return new Promise((resolve, reject) => {
-		let url = 'https://dev-api.naviaddress.com/api/v1.5/Addresses/'
+		let url = 'https://staging-api.naviaddress.com/api/v1.5/Addresses/'
 			+ obj.container+'/'+obj.naviaddress;
 
 		fetch(url).then((res1)=>
