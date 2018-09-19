@@ -18,4 +18,13 @@
 
 Ознакомиться с рабочей версией программы можно по адресу: http://agershun.github.io/inventarizator.
 
+## Примечание
+
+Для работы программы нужно создать файл `config.js`, содержащий следующие строки, в которых нужно
+указать логин и пароль, зарегистрированные на сайте [https://naviaddress.com/map](https://naviaddress.com/map):
+```js
+let email = 'test@test.com';
+let password = 'password';
+```
+
 (c) А.Гершун, 2018

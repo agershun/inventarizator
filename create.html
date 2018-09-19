@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link href="css/ratchet.css" rel="stylesheet">
     <script src="js/ratchet.js"></script>		
+    <script src="config.js"></script>		
 </head>
 <body>
 	<header class="bar bar-nav">
@@ -37,10 +38,12 @@
 		   	<button class="btn btn-primary btn-block" id="create">Создать навиадрес</button>
   		</div>
 
+	   	<p id="info"></p>
+   		<p id="label"></p>
+   		<br><br><br>
+
     </div>
 
-   	<p id="info"></p>
-   	<p id="label"></p>
 
     <nav class="bar bar-tab">
       <a class="tab-item" href="index.html" data-ignore="push">
@@ -62,52 +65,66 @@
     </nav>
 
 <script>
-var video = document.getElementById('video');
-var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
-console.log(video);
+let video = document.getElementById('video');
+let canvas = document.getElementById('canvas');
+let context = canvas.getContext('2d');
+var localStream;
 
 // Создаем видеопоток
 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-        video.src = window.URL.createObjectURL(stream);
+    	localStream = stream;
+        video.srcObject = stream;
         video.play();
     });
-}	
+}
 
 // Добавляем событие по нажатию
 document.getElementById("snap").addEventListener("click", function() {
+	// let w = 391;
+	// let h = 283;
+
 	let w = 391;
-	let h = 283;
+	let h = 600;
 
 	document.getElementById("step2").style.display = "none";
 	document.getElementById("step3").style.display = "block";
 	context.drawImage(video, 0, 0, w, h);
+
+	// Отключаем камеру
+//    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+	 	video.pause();
+  		video.srcObject = undefined;
+	  	localStream.getTracks()[0].stop();	
+//    });
+
+
 });
 
 document.getElementById("create").addEventListener("click", function() {
 	// Получаем токен для авторизации
-	getToken().then((token)=>{
+	getToken(email,password).then((token)=>{
 		createNaviaddress(token);
 	});
 });
 
 
 // Получить токен
-function getToken() {
+function getToken(email,password) {
 	return new Promise((resolve,reject) => {
 		let url = 'https://staging-api.naviaddress.com/api/v1.5/Sessions';
 		let params = {
-			password:'qwerty',    // Пароль и логин для доступа к API 
-			Email:'test@test.com'  //  нужно получить заполнив форму регистрации
+			password:password,    // Пароль и логин для доступа к API 
+			email:email  //  нужно получить заполнив форму регистрации
 		};
 
 		fetch(url,
 		{
 		    headers: {
 		      'Accept': 'application/json',
-		      'Content-Type': 'application/json'
+		      'Content-Type': 'application/json',
 		    },
+		    mode:'cors',
 		    method: "POST",
 		    body: JSON.stringify(params)
 		})
@@ -123,11 +140,10 @@ function createNaviaddress(token) {
         	(position)=>{
         		let coords = position.coords;
 
-				let url = 'https://api.naviaddress.com/api/v1.5/addresses/';
+				let url = 'https://staging-api.naviaddress.com/api/v1.5/addresses/';
         		let body = {
         			lat: coords.latitude,
         			lng: coords.longitude,
-        			description: "Инвентаризатор: "+document.getElementById("description").value,
         			address_type: "free", 
         			default_lang: "ru"
         		};
@@ -135,21 +151,17 @@ function createNaviaddress(token) {
 				fetch(url,
 				{
 				    headers: {
-				      'Accept': 'application/json',
 				      'Content-Type': 'application/json',
+				      'Accept': 'application/json',
 				      'auth-token': token
 				    },
-				    method: "POST",
+				    mode:'cors',
+				    method: 'POST',
 				    body: JSON.stringify(body)
 				}).then((res1) => {
-					console.log(res1);
-					alert('Объект создан');
-					reject();
-					/*
 					res1.json().then((res2) => {
-						console.log(97,res2);
+						acceptNaviaddress(token,res2.result.container, res2.result.naviaddress);
 					});
-					*/
 				});
 		});
 
@@ -157,6 +169,61 @@ function createNaviaddress(token) {
     	alert("Геолокация не поддерживается вашим браузером");
     }
 }
+
+// Подтверждаем навиадрес
+function acceptNaviaddress(token,container,naviaddress) {
+	let url = 'https://staging-api.naviaddress.com/api/v1.5/addresses/accept/'
+	+container+'/'+naviaddress;
+	let body = {};
+
+	fetch(url,
+	{
+	    headers: {
+	      'Accept': 'application/json',
+	      'Content-Type': 'application/json',
+	      'auth-token': token
+	    },
+	    mode:'cors',	    
+	    method: "POST",
+	    body: JSON.stringify(body)
+	}).then((res1) => {
+		res1.json().then((res2) => {
+			putNaviaddress(token, res2.result);
+		});
+	});			
+}
+
+// Заполняем навиадрес данными
+function putNaviaddress(token,data) {
+	console.log(198,data);
+	let container = data.container;
+	let naviaddress = data.naviaddress;
+	let url = 'https://staging-api.naviaddress.com/api/v1.5/addresses/'
+	+container+'/'+naviaddress;
+	let body = data;
+	body.Name = document.getElementById("description").value;
+//		description: document.getElementById("description").value,
+//	};
+
+	fetch(url,
+	{
+	    headers: {
+	      'Accept': 'application/json',
+	      'Content-Type': 'application/json',
+	      'auth-token': token
+	    },
+	    mode:'cors',	    
+	    method: "PUT",
+	    body: JSON.stringify(body)
+	}).then((res1) => {
+		res1.json().then((res2) => {
+			console.log(220,res2);
+			console.log(999);
+			alert('Объект создан!');
+		});
+	});			
+}
+
 
 </script>
 
