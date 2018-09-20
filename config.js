@@ -1,2 +1,2 @@
 let email = 'navinvent@yandex.ru';
-let password = '123456';
+let password = '1234567890';
