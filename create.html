@@ -69,6 +69,7 @@ let canvas = document.getElementById('canvas');
 let context = canvas.getContext('2d');
 var localStream;
 
+
 // Создаем видеопоток
 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
@@ -150,7 +151,6 @@ function createNaviaddress(token) {
 				      'Accept': 'application/json',
 				      'auth-token': token
 				    },
-//				    mode:'no-cors',
 				    method: 'POST',
 				    body: JSON.stringify(body)
 				}).then((res1) => {
@@ -182,21 +182,64 @@ function acceptNaviaddress(token,container,naviaddress) {
 	    body: JSON.stringify(body)
 	}).then((res1) => {
 		res1.json().then((res2) => {
-			putNaviaddress(token, res2.result);
+			postImage(token, res2.result.container, res2.result.naviaddress);
 		});
 	});			
 }
 
+
+function postImage(token,container,naviaddress) {
+	let url = 'https://staging-api.naviaddress.com/api/v1.5/images/';
+
+	let dataURL = canvas.toDataURL('image/jpeg', 0.5);
+	let blob = dataURItoBlob(dataURL);
+	let fd = new FormData();
+	fd.append('0',blob);
+
+	fetch(url,
+	{
+	    headers: {
+	      'Accept': 'application/json',
+	      'auth-token': token
+	    },
+	    method: "POST",
+	    body: fd
+	}).then((res1) => {
+		res1.json().then((res2) => {
+			let imageUrl = res2[0].medium;
+			let imageUuid = res2[0].uuid;
+			putNaviaddress(token, container, naviaddress, imageUrl, imageUuid);
+		});
+	});			
+}
+
+// Конвертируем URI в блоб
+function dataURItoBlob(dataURI) {
+	var byteString;
+	if (dataURI.split(',')[0].indexOf('base64') >= 0)
+	    byteString = atob(dataURI.split(',')[1]);
+	else
+	    byteString = unescape(dataURI.split(',')[1]);
+
+	let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+	let ia = new Uint8Array(byteString.length);
+	for (let i = 0; i < byteString.length; i++) {
+	    ia[i] = byteString.charCodeAt(i);
+	}
+
+	return new Blob([ia], {type:mimeString});
+}
+
 // Заполняем навиадрес данными
-function putNaviaddress(token,data) {
-	console.log(198,data);
-	let container = data.container;
-	let naviaddress = data.naviaddress;
+function putNaviaddress(token,container,naviaddress,imageUrl, imageUuid) {	
 	let url = 'https://staging-api.naviaddress.com/api/v1.5/addresses/'
 	+container+'/'+naviaddress+'?lang=ru';
+
 	let body = {
 		name:document.getElementById("description").value,
-		description:'Создано программой Инвентаризатор: '+document.getElementById("description").value
+		description:'Создано программой Инвентаризатор: '+document.getElementById("description").value,
+		cover: [{image_uuid:imageUuid,image:imageUrl}]
 	};
 
 	fetch(url,
